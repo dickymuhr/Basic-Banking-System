@@ -1,0 +1,21 @@
+{
+  "name": "basic-banking-system",
+  "version": "1.0.0",
+  "description": "",
+  "main": "bank_account.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^5.5.2",
+    "express": "^4.18.2",
+    "prisma": "^5.5.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
