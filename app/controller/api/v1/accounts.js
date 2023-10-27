@@ -8,7 +8,7 @@ module.exports = {
             const newBankAccount = await prisma.bankAccounts.create({
                 data: {
                     ...req.body,
-                    userId: parseInt(req.body.userId, 10) // Assuming that userId is passed within the request body
+                    userId: parseInt(req.body.userId, 10)
                 }
             });
     
@@ -18,11 +18,11 @@ module.exports = {
                 message: 'Bank Account created successfully!',
                 data: newBankAccount
             });
-        } catch (error) {
+        } catch (err) {
             res.status(500).json({
                 status: 'error',
                 code: 500,
-                message: error.message,
+                message: err.message,
             });
         }
     },
@@ -31,17 +31,25 @@ module.exports = {
         try {
             const bankAccounts = await prisma.bankAccounts.findMany();
     
-            res.status(200).json({
+            if (!bankAccounts.length) {
+                return res.status(200).json({
+                    status: 'success',
+                    code: 200,
+                    message: 'Data is empty',
+                });
+            }
+
+            return res.status(200).json({
                 status: 'success',
                 code: 200,
-                message: 'Bank Accounts fetched successfully!',
+                message: 'Getting all accounts data successfully!',
                 data: bankAccounts
             });
-        } catch (error) {
+        } catch (err) {
             res.status(500).json({
                 status: 'error',
                 code: 500,
-                message: error.message,
+                message: err.message,
             });
         }
     },
@@ -54,7 +62,7 @@ module.exports = {
                 return res.status(400).json({
                     status: 'fail',
                     code: 400,
-                    message: 'Bad Request! A valid id is required',
+                    message: 'Bad Request! Id is not valid',
                 });
             }
     
@@ -63,7 +71,9 @@ module.exports = {
                     id: bankAccountId
                 },
                 include: {
-                    user: true, // Including related Profile data
+                    user: true, 
+                    sentTransactions: true,
+                    receivedTransactions: true,
                 },
             });
     
@@ -75,17 +85,17 @@ module.exports = {
                 });
             }
     
-            res.status(200).json({
+            return res.status(200).json({
                 status: 'success',
                 code: 200,
-                message: 'Bank Account fetched successfully!',
+                message: 'Getting account data successfully!',
                 data: bankAccount
             });
-        } catch (error) {
+        } catch (err) {
             res.status(500).json({
                 status: 'error',
                 code: 500,
-                message: error.message,
+                message: err.message,
             });
         }
     },

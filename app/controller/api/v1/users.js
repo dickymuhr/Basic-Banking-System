@@ -5,13 +5,15 @@ const prisma = new PrismaClient();
 module.exports = {
     async get(req, res) {
         try {
-            const { search, page = 1, limit = 10 } = req.query;
+            const { search = "", page = 1, limit = 10 } = req.query;
             const skip = (page - 1) * limit;
+            const searchTerm = search.trim().toLowerCase();
             
             const users = await prisma.users.findMany({
                 where: {
                     name: {
-                        contains: search || '',
+                        contains: searchTerm,
+                        mode: 'insensitive',
                     },
                 },
                 skip: skip,
@@ -25,49 +27,45 @@ module.exports = {
                 return res.status(200).json({
                     status: 'success',
                     code: 200,
-                    message: 'Data Empty',
+                    message: 'Data is empty',
                 });
             }
 
             return res.status(200).json({
                 status: 'success',
                 code: 200,
-                message: 'Success!',
+                message: 'Getting all users data successfully!',
                 data: users,
             });
-        } catch (error) {
-            console.error(error);
+        } catch (err) {
             return res.status(500).json({
                 status: 'error',
                 code: 500,
-                message: error.message,
+                message: err.message,
             });
         }
     },
 
     async getById(req, res) {
-        // Validate the input
         const userId = parseInt(req.params.id, 10);
         if (!userId) {
             return res.status(400).json({
                 status: 'fail',
                 code: 400,
-                message: 'Bad Request! A valid id is required',
+                message: 'Bad Request! Id is not valid',
             });
         }
 
         try {
-            // Fetch the user by id using Prisma
             const user = await prisma.users.findUnique({
                 where: {
                     id: userId,
                 },
                 include: {
-                    profile: true, // Including related Profile data
+                    profile: true, 
                 },
             });
 
-            // Handle case when user does not exist
             if (!user) {
                 return res.status(404).json({
                     status: 'fail',
@@ -76,20 +74,19 @@ module.exports = {
                 });
             }
 
-            // Send the response with user data
             return res.status(200).json({
                 status: 'success',
                 code: 200,
-                message: 'Success!',
+                message: 'Getting user data successfully!',
                 data: user,
             });
 
-        } catch (error) {
+        } catch (err) {
             // Handle unexpected errors
             return res.status(500).json({
                 status: 'error',
                 code: 500,
-                message: error.message,
+                message: err.message,
             });
         }
     },
@@ -118,15 +115,15 @@ module.exports = {
             res.status(201).json({
                 status: 'success',
                 code: 201,
-                message: 'Data ditambahkan!',
+                message: 'User data added!',
                 data: user
             });
     
-        } catch (error) {
+        } catch (err) {
             res.status(500).json({
                 status: 'error',
                 code: 500,
-                message: error.message,
+                message: err.message,
             });
         }
     },    
