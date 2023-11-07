@@ -1,6 +1,4 @@
-const { PrismaClient } = require('@prisma/client')
-
-const prisma = new PrismaClient();
+const prisma = require('../../../prismaClient');
 
 module.exports = {
     async get(req, res) {
@@ -28,6 +26,7 @@ module.exports = {
                     status: 'success',
                     code: 200,
                     message: 'Data is empty',
+                    data: users
                 });
             }
 
@@ -109,8 +108,7 @@ module.exports = {
                     }
                 }
             });
-    
-            console.log(user)
+
     
             res.status(201).json({
                 status: 'success',
