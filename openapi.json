@@ -1,0 +1,168 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+      "title": "Binar Backend Engineering Bootcamp Banking API",
+      "description": "This is a basic banking API for a project in the Binar Backend Engineering Bootcamp, built with Express.js.",
+      "version": "1.0.0"
+    },
+    "servers": [
+      {
+        "url": "http://localhost:3000/v1",
+        "description": "Local server"
+      }
+    ],
+    "paths": {
+      "/accounts": {
+        "get": {
+          "tags": ["Accounts"],
+          "summary": "Get all bank accounts",
+          "operationId": "getAccounts",
+          "responses": {
+            "200": {
+              "description": "List of bank accounts",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/BankAccount"
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        },
+        "post": {
+          "tags": ["Accounts"],
+          "summary": "Create a new bank account",
+          "operationId": "createAccount",
+          "requestBody": {
+            "description": "Bank account data",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BankAccountCreate"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Bank account created successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "404": {
+              "description": "User not found"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
+      "/accounts/{id}": {
+        "get": {
+          "tags": ["Accounts"],
+          "summary": "Get a bank account by ID",
+          "operationId": "getAccountById",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "description": "Unique id of the bank account"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Bank account data",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/BankAccount"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "404": {
+              "description": "Bank Account not found"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "BankAccount": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "bank_name": {
+              "type": "string"
+            },
+            "account_number": {
+              "type": "string"
+            },
+            "balance": {
+              "type": "number",
+              "format": "float"
+            },
+            "createAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "updatedAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "userId": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        },
+        "BankAccountCreate": {
+          "type": "object",
+          "properties": {
+            "userId": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "bank_name": {
+              "type": "string"
+            },
+            "account_number": {
+              "type": "string"
+            },
+            "balance": {
+              "type": "number",
+              "format": "float"
+            }
+          },
+          "required": ["userId", "bank_name", "account_number", "balance"]
+        }
+      },
+      "securitySchemes": {
+      }
+    }
+  }
+  
