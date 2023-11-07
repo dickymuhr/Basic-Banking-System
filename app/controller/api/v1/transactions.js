@@ -1,6 +1,4 @@
-const { PrismaClient } = require('@prisma/client');
-
-const prisma = new PrismaClient();
+const prisma = require('../../../prismaClient');
 
 module.exports = {
     async create(req, res) {
@@ -83,6 +81,7 @@ module.exports = {
                     status: 'success',
                     code: 200,
                     message: 'Data is empty',
+                    data: transactions
                 });
             }
     
@@ -133,17 +132,17 @@ module.exports = {
             });
 
             if(!transaction){
-                return res.status(400).json({
+                return res.status(404).json({
                     status:'fail',
                     code: 404,
-                    message: 'Transaction not found!',
+                    message: 'Transaction not found',
                 });
             }
 
             res.status(200).json({
                 status:'success',
                 code: 200,
-                message: 'Getting transaction data succesfully!',
+                message: 'Getting transaction data successfully!',
                 data: transaction,
             });
 

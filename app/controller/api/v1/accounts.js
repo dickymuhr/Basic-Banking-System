@@ -1,14 +1,37 @@
-const { PrismaClient } = require('@prisma/client')
-
-const prisma = new PrismaClient();
+const prisma = require('../../../prismaClient');
 
 module.exports = {
     async create(req, res) {
+        const userId = parseInt(req.body.userId, 10);
+        if (!userId) {
+            return res.status(400).json({
+                status: 'fail',
+                code: 400,
+                message: 'Bad Request! User ID is not valid',
+            });
+        }
+
         try {
+            // Check if the user exists
+            const userExists = await prisma.users.findUnique({
+                where: {
+                    id: userId
+                }
+            });
+
+            // If the user doesn't exist, return an error
+            if (!userExists) {
+                return res.status(404).json({
+                    status: 'fail',
+                    code: 404,
+                    message: 'User not found!',
+                });
+            }
+            
             const newBankAccount = await prisma.bankAccounts.create({
                 data: {
                     ...req.body,
-                    userId: parseInt(req.body.userId, 10)
+                    userId: userId
                 }
             });
     
@@ -36,6 +59,7 @@ module.exports = {
                     status: 'success',
                     code: 200,
                     message: 'Data is empty',
+                    data: bankAccounts
                 });
             }
 
@@ -62,7 +86,7 @@ module.exports = {
                 return res.status(400).json({
                     status: 'fail',
                     code: 400,
-                    message: 'Bad Request! Id is not valid',
+                    message: 'Bad Request! Account ID is not valid',
                 });
             }
     
