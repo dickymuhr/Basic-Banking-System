@@ -7,7 +7,8 @@ router.use('/images', express.static('public/images'))
 
 router.post('/v1/upload', 
             storage.image.single('image'), 
-            controller.media.uploadImage)
+            controller.media.uploadImage);
 
+router.post('/v1/qrcode', controller.media.qrcode)
 
 module.exports = router;
