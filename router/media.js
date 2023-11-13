@@ -3,7 +3,7 @@ const router = express.Router();
 const controller = require('../app/controller')
 const storage = require('../utils/multer')
 
-router.get('/images', express.static('public/images'))
+router.use('/images', express.static('public/images'))
 
 router.post('/v1/upload', 
             storage.image.single('image'), 
