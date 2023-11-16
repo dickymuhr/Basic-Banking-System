@@ -4,7 +4,9 @@
   "description": "",
   "main": "bank_account.js",
   "scripts": {
-    "start": "nodemon server.js",
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "build": "prisma generate && primsa migrate deploy",
     "test": "jest --coverage"
   },
   "keywords": [],
