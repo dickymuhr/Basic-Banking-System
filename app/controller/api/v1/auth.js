@@ -1,8 +1,9 @@
 const prisma = require('../../../prismaClient');
 const { encryptPassword, checkPassword } = require('../../../../utils/auth')
 const { JWTsign } = require('../../../../utils/jwt')
-
-
+const { sendMailHTML } = require('../../../../utils/mailer');
+const ejs = require('ejs');
+const path = require('path');
 
 module.exports = {
     async register(req, res){
@@ -34,6 +35,11 @@ module.exports = {
                 }
             });
 
+            // Load and compile EJS template
+            const emailTemplatePath = path.join(__dirname, '../../../../templates/email-register.ejs');
+            const html = await ejs.renderFile(emailTemplatePath, { name: name, email: email });
+            // Send registration email
+            sendMailHTML(email, 'Registration Successful', html);
     
             res.status(201).json({
                 status: 'success',
